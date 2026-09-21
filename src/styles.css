@@ -161,16 +161,53 @@
   50% { opacity: .08; transform: scale(1.45); }
 }
 
+@keyframes globe-arrival {
+  0% { transform: scale(.55) rotate(-18deg); opacity: 0; }
+  22% { opacity: 1; }
+  68% { transform: scale(1) rotate(8deg); opacity: 1; }
+  100% { transform: scale(2.4) rotate(12deg); opacity: 0; }
+}
+
+@keyframes intro-fade { 0%, 82% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
+
 .dashboard-shell {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: 32px 24px;
   background: linear-gradient(135deg, var(--background), oklch(0.94 0.025 207));
 }
 
+.globe-intro { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; pointer-events: none; visibility: hidden; opacity: 0; background: radial-gradient(circle, oklch(0.35 0.12 238), oklch(0.19 0.07 251)); }
+.globe-intro.is-visible { visibility: visible; opacity: 1; animation: intro-fade 3.2s ease-in-out forwards; }
+.globe-scene { position: relative; width: min(72vw, 420px); aspect-ratio: 1; display: grid; place-items: center; animation: globe-arrival 3.2s cubic-bezier(.3,.7,.2,1) forwards; }
+.intro-globe { position: absolute; inset: 0; width: 100%; height: 100%; }
+.intro-globe .ocean { fill: oklch(0.67 0.12 216); stroke: oklch(0.88 0.08 195); stroke-width: 3; }
+.globe-line { fill: none; stroke: oklch(0.91 0.04 211 / 34%); stroke-width: 1.4; }
+.intro-brazil { transform-box: fill-box; transform-origin: center; }
+.intro-brazil path { fill: oklch(0.82 0.13 144); stroke: oklch(0.94 0.04 125); stroke-width: .7; }
+.globe-scene > img { z-index: 2; width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 5px 10px var(--shadow)); }
+.globe-scene > p { position: absolute; bottom: -28px; margin: 0; color: var(--primary-foreground); font-size: 13px; font-weight: 700; }
+.globe-orbit { position: absolute; z-index: 3; width: 112%; height: 31%; border: 2px solid oklch(0.86 0.18 88 / 65%); border-radius: 50%; transform: rotate(-18deg); }
+
+.dashboard-panel { width: min(100%, 980px); display: grid; gap: 14px; transition: opacity .5s ease .15s, transform .5s ease .15s; }
+.dashboard-panel.is-waiting { opacity: 0; transform: translateY(12px); }
+.panel-heading { display: flex; justify-content: space-between; align-items: center; padding: 0 2px; }
+.panel-heading .brand-lockup img { width: 52px; height: 52px; }
+.panel-heading h1 { font-size: 24px; }
+.live-chip { display: flex; align-items: center; gap: 8px; color: var(--muted-foreground); font-size: 11px; font-weight: 700; }
+.live-chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-teal); box-shadow: 0 0 0 4px oklch(0.68 0.15 188 / 14%); }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.metric-card { position: relative; min-width: 0; overflow: hidden; display: flex; align-items: center; gap: 11px; padding: 15px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); box-shadow: 0 8px 22px var(--shadow); }
+.metric-icon { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 7px; color: var(--brand-blue); background: var(--secondary); }
+.metric-card p { overflow: hidden; margin: 0 0 3px; color: var(--muted-foreground); font-size: 10px; font-weight: 650; white-space: nowrap; text-overflow: ellipsis; }
+.metric-card strong { font-size: 18px; line-height: 1; }
+.metric-card strong small { color: var(--muted-foreground); font-size: 10px; font-weight: 650; }
+.metric-progress { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--brand-teal); transition: width 900ms cubic-bezier(.22,1,.36,1); }
+
 .journey-card {
-  width: min(100%, 760px);
+  width: 100%;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -212,8 +249,9 @@
 .place-label text { fill: var(--foreground); font-size: 11px; font-weight: 750; }
 .place-label tspan + tspan { fill: var(--muted-foreground); font-size: 9px; font-weight: 600; }
 .truck { transition: transform 900ms cubic-bezier(.22, 1, .36, 1); }
-.trailer { fill: var(--surface); stroke: var(--brand-blue); stroke-width: 2; }
-.truck-cab { fill: var(--brand-blue); }
+.trailer { fill: oklch(0.54 0.21 29); stroke: oklch(0.38 0.15 26); stroke-width: 2; }
+.trailer-ribs { fill: none; stroke: oklch(0.68 0.16 30); stroke-width: .7; opacity: .65; }
+.truck-cab { fill: oklch(0.5 0.2 28); }
 .truck-window { fill: oklch(0.85 0.05 225); }
 .truck-bumper { fill: var(--brand-orange); }
 .wheel { fill: oklch(0.23 0.02 250); stroke: var(--surface); stroke-width: 1.5; }
@@ -233,10 +271,20 @@
 .progress-meta strong { color: var(--brand-blue); font-size: 12px; }
 .progress-rail { height: 7px; overflow: hidden; border-radius: 7px; background: var(--border); }
 .progress-rail span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--brand-teal), var(--brand-blue)); transition: width 900ms cubic-bezier(.22, 1, .36, 1); }
-.day-selector { display: flex; justify-content: center; gap: 7px; padding: 11px 18px; border-top: 1px solid var(--border); }
-.day-selector button { width: 25px; height: 25px; border: 0; border-radius: 50%; background: transparent; color: var(--muted-foreground); font-size: 10px; font-weight: 700; cursor: pointer; transition: background-color .2s, color .2s, transform .2s; }
-.day-selector button:hover { background: var(--secondary); color: var(--foreground); }
-.day-selector button.active { background: var(--brand-yellow); color: var(--foreground); transform: scale(1.08); }
+.timeline-card { padding: 17px 20px 15px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); box-shadow: 0 8px 22px var(--shadow); }
+.timeline-heading { display: flex; align-items: end; justify-content: space-between; margin-bottom: 12px; }
+.timeline-heading h2 { margin: 0; font-size: 16px; }
+.timeline-heading > strong { color: var(--brand-blue); font-size: 20px; }
+.timeline-track { height: 4px; margin: 0 4.8% -11px; border-radius: 4px; background: var(--border); }
+.timeline-track span { display: block; height: 100%; border-radius: inherit; background: var(--brand-orange); transition: width 900ms cubic-bezier(.22,1,.36,1); }
+.timeline-days { position: relative; display: grid; grid-template-columns: repeat(8, 1fr); }
+.timeline-days button { min-width: 0; display: grid; justify-items: center; gap: 4px; padding: 0 2px; border: 0; color: var(--muted-foreground); background: transparent; cursor: pointer; }
+.timeline-days button i { display: grid; place-items: center; width: 22px; height: 22px; border: 3px solid var(--surface); border-radius: 50%; background: var(--border); color: var(--muted-foreground); font-size: 9px; font-style: normal; font-weight: 800; transition: transform .2s, background-color .2s; }
+.timeline-days button.complete i { background: var(--brand-orange); color: var(--surface); }
+.timeline-days button.active i { background: var(--brand-yellow); color: var(--foreground); transform: scale(1.25); }
+.timeline-days button span { font-size: 9px; font-weight: 750; }
+.timeline-days button small { max-width: 90px; overflow: hidden; font-size: 8px; white-space: nowrap; text-overflow: ellipsis; }
+.demo-note { margin: -5px 2px 0; color: var(--muted-foreground); font-size: 9px; text-align: right; }
 
 @media (max-width: 560px) {
   .dashboard-shell { padding: 10px; }
@@ -247,9 +295,22 @@
   .day-counter { min-width: 63px; padding-inline: 8px; }
   .map-stage { height: 330px; }
   .card-footer { grid-template-columns: 1fr; gap: 13px; padding: 14px 16px; }
+  .panel-heading { padding-inline: 4px; }
+  .panel-heading .brand-lockup img { width: 43px; height: 43px; }
+  .panel-heading h1 { font-size: 20px; }
+  .live-chip { display: none; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .metric-card { padding: 12px 10px; }
+  .metric-icon { width: 30px; height: 30px; }
+  .metric-card strong { font-size: 15px; }
+  .timeline-card { padding-inline: 10px; overflow: hidden; }
+  .timeline-days button small { display: none; }
+  .timeline-track { margin-inline: 5%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .truck, .route-progress, .progress-rail span { transition: none; }
   .destination-point .point-ring { animation: none; }
+  .globe-intro.is-visible { animation-duration: .8s; }
+  .globe-scene { animation-duration: .8s; }
 }
