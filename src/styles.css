@@ -178,14 +178,14 @@
   background: linear-gradient(135deg, var(--background), oklch(0.94 0.025 207));
 }
 
-.globe-intro { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; pointer-events: none; visibility: hidden; opacity: 0; background: radial-gradient(circle, oklch(0.35 0.12 238), oklch(0.19 0.07 251)); }
+.globe-intro { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; pointer-events: none; visibility: hidden; opacity: 0; background: radial-gradient(circle, oklch(0.5 0.13 235), oklch(0.32 0.1 240)); }
 .globe-intro.is-visible { visibility: visible; opacity: 1; animation: intro-fade 3.2s ease-in-out forwards; }
 .globe-scene { position: relative; width: min(72vw, 420px); aspect-ratio: 1; display: grid; place-items: center; animation: globe-arrival 3.2s cubic-bezier(.3,.7,.2,1) forwards; }
 .intro-globe { position: absolute; inset: 0; width: 100%; height: 100%; }
-.intro-globe .ocean { fill: oklch(0.67 0.12 216); stroke: oklch(0.88 0.08 195); stroke-width: 3; }
-.globe-line { fill: none; stroke: oklch(0.91 0.04 211 / 34%); stroke-width: 1.4; }
+.intro-globe .ocean { fill: oklch(0.62 0.14 235); stroke: oklch(0.78 0.1 224); stroke-width: 3; }
+.globe-line { fill: none; stroke: oklch(0.95 0.03 210 / 38%); stroke-width: 1.4; }
 .intro-brazil { transform-box: fill-box; transform-origin: center; }
-.intro-brazil path { fill: oklch(0.82 0.13 144); stroke: oklch(0.94 0.04 125); stroke-width: .7; }
+.intro-brazil path { fill: oklch(0.62 0.15 145); stroke: oklch(0.78 0.11 148); stroke-width: .7; }
 .globe-scene > img { z-index: 2; width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 5px 10px var(--shadow)); }
 .globe-scene > p { position: absolute; bottom: -28px; margin: 0; color: var(--primary-foreground); font-size: 13px; font-weight: 700; }
 .globe-orbit { position: absolute; z-index: 3; width: 112%; height: 31%; border: 2px solid oklch(0.86 0.18 88 / 65%); border-radius: 50%; transform: rotate(-18deg); }
